@@ -18,8 +18,13 @@ app.use(cors({
 
 app.use(express.json());
 
-// Koneksi ke MongoDB Atlas
-mongoose.connect(process.env.MONGO_URI)
+// Koneksi ke MongoDB Atlas dengan opsi optimasi
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 30000, // Timeout pemilihan server 30 detik
+  socketTimeoutMS: 45000, // Timeout socket 45 detik
+  connectTimeoutMS: 30000, // Timeout koneksi 30 detik
+  maxPoolSize: 10 // Batasi koneksi untuk serverless
+})
   .then(() => console.log("✅ Terhubung ke MongoDB Atlas"))
   .catch(err => console.error("❌ Gagal koneksi ke MongoDB:", err));
 

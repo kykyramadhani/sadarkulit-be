@@ -20,7 +20,7 @@ app.use(express.json());
 
 // Koneksi ke MongoDB Atlas dengan opsi optimasi
 mongoose.connect(process.env.MONGO_URI, {
-  serverSelectionTimeoutMS: 30000, // Timeout pemilihan server 30 detik
+  serverSelectionTimeoutMS: 60000, // Timeout pemilihan server 30 detik
   socketTimeoutMS: 45000, // Timeout socket 45 detik
   connectTimeoutMS: 30000, // Timeout koneksi 30 detik
   maxPoolSize: 10 // Batasi koneksi untuk serverless

@@ -43,17 +43,17 @@ app.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Semua field wajib diisi' });
     }
 
-    // Cek jika email sudah terdaftar
-    const existingUser = await User.findOne({ email });
+    // Cek jika email atau username sudah terdaftar
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(400).json({ message: 'Email sudah terdaftar' });
+      return res.status(400).json({ message: 'Email atau username sudah terdaftar' });
     }
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Buat user baru
+    // Buat user mới
     const user = new User({
       username,
       email,
@@ -171,10 +171,20 @@ app.get('/users', authMiddleware, async (req, res) => {
 // History endpoint (protected)
 app.post('/history', authMiddleware, async (req, res) => {
   try {
+    const { detectedDisease, imageURL, notes } = req.body;
+
+    // Validasi input
+    if (!detectedDisease || !imageURL) {
+      return res.status(400).json({ message: 'detectedDisease dan imageURL wajib diisi' });
+    }
+
     const history = new History({
-      ...req.body,
-      userId: req.user._id
+      userId: req.user._id,
+      detectedDisease,
+      imageURL,
+      notes
     });
+
     await history.save();
     res.status(201).json(history);
   } catch (error) {

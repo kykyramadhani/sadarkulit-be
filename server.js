@@ -11,7 +11,7 @@ const History = require('./models/history');
 
 // Aktifkan CORS
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://sadarkulit-fe.vercel.app', // Ganti dengan URL frontend kamu
+  origin: 'http://localhost:5173', // Ganti dengan URL frontend kamu
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

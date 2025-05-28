@@ -2,7 +2,8 @@
   "info": {
     "_postman_id": "7f8a3b2c-9e6f-4b8c-9c1d-3f4e7a9b5e1f",
     "name": "SadarKulit API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Koleksi untuk menguji API SadarKulit di https://sadarkulit-be.vercel.app/"
   },
   "item": [
     {
@@ -14,7 +15,8 @@
           "raw": "{{baseUrl}}/",
           "host": ["{{baseUrl}}"],
           "path": [""]
-        }
+        },
+        "description": "Menguji apakah API berjalan dengan benar."
       },
       "response": []
     },
@@ -36,7 +38,8 @@
           "raw": "{{baseUrl}}/register",
           "host": ["{{baseUrl}}"],
           "path": ["register"]
-        }
+        },
+        "description": "Mendaftarkan user baru. Pastikan username dan email unik."
       },
       "response": []
     },
@@ -73,7 +76,8 @@
           "raw": "{{baseUrl}}/login",
           "host": ["{{baseUrl}}"],
           "path": ["login"]
-        }
+        },
+        "description": "Login untuk mendapatkan token JWT. Token disimpan ke variabel 'token'."
       },
       "response": []
     },
@@ -96,7 +100,8 @@
           "raw": "{{baseUrl}}/users",
           "host": ["{{baseUrl}}"],
           "path": ["users"]
-        }
+        },
+        "description": "Mengambil daftar user (memerlukan token dari login)."
       },
       "response": []
     },
@@ -118,7 +123,8 @@
           "raw": "{{baseUrl}}/users",
           "host": ["{{baseUrl}}"],
           "path": ["users"]
-        }
+        },
+        "description": "Membuat user baru (tidak memerlukan autentikasi, pertimbangkan untuk menambahkan authMiddleware)."
       },
       "response": []
     },
@@ -144,13 +150,14 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"data\":{\"action\":\"skin_check\",\"result\":\"healthy\"}}"
+          "raw": "{\"detectedDisease\":\"Eczema\",\"imageURL\":\"https://example.com/images/skin.jpg\",\"notes\":\"Test notes for skin check\"}"
         },
         "url": {
           "raw": "{{baseUrl}}/history",
           "host": ["{{baseUrl}}"],
           "path": ["history"]
-        }
+        },
+        "description": "Membuat entri history baru untuk user yang login. Memerlukan token dan field wajib: detectedDisease, imageURL."
       },
       "response": []
     },
@@ -173,7 +180,8 @@
           "raw": "{{baseUrl}}/history",
           "host": ["{{baseUrl}}"],
           "path": ["history"]
-        }
+        },
+        "description": "Mengambil daftar history untuk user yang login (memerlukan token)."
       },
       "response": []
     }

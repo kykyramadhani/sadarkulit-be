@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Optional: cache files
+.cache
+
+# Build output (jika ada)
+dist/
+build/
+
+# OS files (macOS, Windows)
+.DS_Store
+Thumbs.db

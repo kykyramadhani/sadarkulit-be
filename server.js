@@ -1,10 +1,9 @@
 require('dotenv').config();
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const cors = require('cors');   
+const cors = require('cors');
 const app = express();
 
 const User = require('./models/user');
@@ -12,7 +11,7 @@ const History = require('./models/history');
 
 // Aktifkan CORS
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || 'https://sadarkulit-fe.vercel.app', // Ganti dengan URL frontend kamu
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -187,8 +186,4 @@ app.get('/history', authMiddleware, async (req, res) => {
   }
 });
 
-// Jalankan server
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server berjalan di http://localhost:${PORT}`);
-});
+module.exports = app;

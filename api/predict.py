@@ -13,7 +13,6 @@ if root_dir not in sys.path:
     sys.path.append(root_dir)
 # --- KODE BARU BERAKHIR DI SINI ---
 
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import numpy as np

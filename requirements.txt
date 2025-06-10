@@ -1,9 +1,0 @@
-flask
-numpy
-tensorflow
-keras
-pillow
-pandas
-gunicorn
-flask-cors
-# Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process

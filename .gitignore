@@ -1,6 +1,12 @@
 # Node modules
 node_modules/
+api/
+requirements.txt
+image_processor.py
+image_loader.py
 
+models/my_model.h5
+models/class_labels.json
 # Environment variables
 .env
 

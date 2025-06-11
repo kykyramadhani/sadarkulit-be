@@ -28,7 +28,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Middleware untuk menangani file biner (khusus untuk gambar)
+// Middleware untuk menangani file biner
 app.use(express.raw({
   type: ['image/jpeg', 'image/png'],
   limit: '300mb'

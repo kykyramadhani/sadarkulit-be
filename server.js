@@ -1,4 +1,3 @@
-// test build
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -6,12 +5,13 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const historyRoutes = require('./routes/historyRoutes');
+const predictRoutes = require('./routes/predictRoutes'); 
 
 const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://sadarkulit-fe.vercel.app' 
+  'https://sadarkulit-fe.vercel.app'
 ];
 
 app.use(cors({
@@ -24,9 +24,12 @@ app.use(cors({
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true 
+  credentials: true
 }));
 app.use(express.json());
+
+app.use(express.raw({ type: 'image/jpeg', limit: '300mb' }));
+app.use(express.raw({ type: 'image/png', limit: '300mb' }));
 
 mongoose.connect(process.env.MONGO_URI, {
   serverSelectionTimeoutMS: 60000,
@@ -45,6 +48,7 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/history', historyRoutes);
+app.use('/predict', predictRoutes); 
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

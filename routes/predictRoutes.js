@@ -3,6 +3,11 @@ const router = express.Router();
 const { predict } = require('../controllers/predictController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/predict', authMiddleware, predict);
+console.log('Memuat predictRoutes.js');
+
+router.post('/predict', (req, res, next) => {
+  console.log('Mencapai rute /predict');
+  next();
+}, authMiddleware, predict);
 
 module.exports = router;

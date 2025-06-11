@@ -1,39 +1,53 @@
 const axios = require('axios');
+const FormData = require('form-data');
 
 const predict = async (req, res) => {
   try {
-    console.log('Received request body length:', req.body.length);
-    if (!req.body || req.body.length === 0) {
-      return res.status(400).json({ error: 'Tidak ada gambar yang dikirim' });
+    console.log('Received predict request');
+    if (!req.file) {
+      console.log('No image provided in request');
+      return res.status(400).json({ error: 'No image provided' });
     }
 
+    // Create FormData for Azure API
     const formData = new FormData();
-    formData.append('image', req.body, {
+    formData.append('image', req.file.buffer, {
       filename: 'skin_image.jpg',
-      contentType: req.get('content-type') || 'image/jpeg'
+      contentType: req.file.mimetype,
     });
 
-    const response = await axios.post(
-      'https://sadarkulit-ml-d6b8dderhsdxf7ay.southeastasia-01.azurewebsites.net/',
-      formData,
-      {
-        headers: {
-          ...formData.getHeaders(),
-          'Content-Type': 'multipart/form-data'
-        },
-        maxContentLength: 300 * 1024 * 1024,
-        maxBodyLength: 300 * 1024 * 1024,
-        timeout: 10000
-      }
-    );
+    // Send request to Azure API
+    const azureApiUrl = process.env.AZURE_API_URL || 'https://sadarkulit-ml-d6b8dderhsdxf7ay.southeastasia-01.azurewebsites.net/';
+    const response = await axios.post(azureApiUrl, formData, {
+      headers: {
+        ...formData.getHeaders(),
+      },
+      maxContentLength: 300 * 1024 * 1024, // 300 MB
+      maxBodyLength: 300 * 1024 * 1024, // 300 MB
+      timeout: 60000, // 60 seconds
+    });
 
-    res.json(response.data);
+    console.log('Azure API response:', response.data);
+    res.status(200).json(response.data);
   } catch (error) {
-    console.error('Error saat prediksi:', error.message, error.stack);
+    console.error('Prediction error:', {
+      message: error.message,
+      stack: error.stack,
+      response: error.response ? {
+        status: error.response.status,
+        data: error.response.data,
+      } : null,
+    });
+
     if (error.response) {
-      return res.status(error.response.status).json({ error: error.response.data.error });
+      return res.status(error.response.status).json({
+        error: error.response.data.error || 'Error from Azure API',
+      });
     }
-    res.status(500).json({ error: 'Terjadi kesalahan internal di server backend' });
+    if (error.code === 'ECONNABORTED') {
+      return res.status(504).json({ error: 'Request to Azure API timed out' });
+    }
+    res.status(500).json({ error: 'Internal server error during prediction' });
   }
 };
 

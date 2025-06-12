@@ -13,7 +13,6 @@ const classLabels = {
   "7": "Psoriasis",
   "8": "Seborrheic Keratoses / Benign Tumor",
   "9": "Tinea Ringworm Candidiasis / Fungal Infections",
-  "10": "Warts Molluscum" 
 };
 
 const predict = async (req, res) => {

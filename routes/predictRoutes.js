@@ -5,7 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 console.log('Memuat predictRoutes.js');
 
-router.post('/predict', (req, res, next) => {
+router.post('/', (req, res, next) => {
   console.log('Mencapai rute /predict');
   next();
 }, authMiddleware, predict);

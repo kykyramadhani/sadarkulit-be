@@ -2,9 +2,26 @@ const axios = require('axios');
 const FormData = require('form-data');
 const { createHistory } = require('./historyController');
 
+const classLabels = {
+  "0": "Eczema",
+  "1": "Warts Molluscum",
+  "2": "Melanoma",
+  "3": "Atopic Dermatitis",
+  "4": "Basal Cell Carcinoma",
+  "5": "Melanocytic Nevi",
+  "6": "Benign Keratosis-like Lesions",
+  "7": "Psoriasis",
+  "8": "Seborrheic Keratoses / Benign Tumor",
+  "9": "Tinea Ringworm Candidiasis / Fungal Infections",
+  "10": "Warts Molluscum" 
+};
+
 const predict = async (req, res) => {
   try {
     console.log('Menerima request prediksi');
+    console.log('Authorization Header:', req.headers.authorization); 
+    console.log('User dari token:', req.user); 
+
     if (!req.file) {
       console.log('Tidak ada gambar yang dikirim dalam request');
       return res.status(400).json({ error: 'Tidak ada gambar yang dikirim' });
@@ -21,16 +38,27 @@ const predict = async (req, res) => {
       headers: {
         ...formData.getHeaders(),
       },
-      maxContentLength: 300 * 1024 * 1024, // 300 MB
-      maxBodyLength: 300 * 1024 * 1024, // 300 MB
-      timeout: 60000, // 60 detik
+      maxContentLength: 300 * 1024 * 1024, 
+      maxBodyLength: 300 * 1024 * 1024, 
+      timeout: 60000, 
     });
 
     console.log('Respons API Azure:', response.data);
 
+    const predictedDisease = response.data.predicted_disease;
+    const classId = predictedDisease.split('.')[0].trim(); 
+    console.log('Extracted classId:', classId); 
+    const friendlyDiseaseName = classLabels[classId] || predictedDisease; 
+    console.log('Friendly Disease Name:', friendlyDiseaseName); 
+
+    const modifiedResponse = {
+      ...response.data,
+      predicted_disease: friendlyDiseaseName
+    };
+
     const historyReq = {
       user: req.user,
-      body: { detectedDisease: response.data.predicted_disease },
+      body: { detectedDisease: friendlyDiseaseName },
     };
     const historyRes = {
       status: (code) => ({
@@ -39,7 +67,7 @@ const predict = async (req, res) => {
     };
     await createHistory(historyReq, historyRes);
 
-    res.status(200).json(response.data);
+    res.status(200).json(modifiedResponse);
   } catch (error) {
     console.error('Error prediksi:', {
       message: error.message,
